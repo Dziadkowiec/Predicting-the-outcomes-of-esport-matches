@@ -1,3 +1,6 @@
+<img width="1249" alt="header" src="https://github.com/user-attachments/assets/ef658b80-9da2-4641-a075-f0996109a417">
+
+
 **MODELING THE OUTCOMES OF THE MATCHES**
 
 Welcome to my first-ever data science project!
