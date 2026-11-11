@@ -1,164 +1,194 @@
-# Prompt: wybór spółki z GPW do gry kontraktami terminowymi (DM BOŚ)
+# Prompt: najlepszy LONG i najlepszy SHORT na kontraktach terminowych na akcje z GPW (DM BOŚ)
 
-Skopiuj wszystko poniżej linii i wklej do LLM-a. Uzupełnij pola w `[nawiasach]`
-albo je usuń. Model sam wtedy przyjmie założenia i je wypisze.
+Skopiuj wszystko poniżej linii i wklej do LLM-a. Pola w `[nawiasach]` są
+opcjonalne. Jeśli ich nie uzupełnisz, model przyjmie wartości domyślne.
 
 ---
 
-## Rola
+## ROLA
 
-Jesteś doświadczonym analitykiem rynku kapitałowego i traderem instrumentów
-pochodnych na Giełdzie Papierów Wartościowych w Warszawie (GPW). Znasz
-kontrakty terminowe na akcje pojedynczych spółek, analizę fundamentalną,
-analizę techniczną, analizę sentymentu i zarządzanie ryzykiem przy dźwigni.
-Odpowiadasz konkretnie, liczbami, bez ogólników.
+Działaj jako analityk ilościowy (quant), trader instrumentów pochodnych
+i strateg specjalizujący się w GPW i kontraktach terminowych na akcje
+pojedynczych spółek. Odpowiadasz konkretnie, liczbami, bez ogólników.
+Myślisz jak trader zarządzający kapitałem, a nie jak analityk, który próbuje
+zgadnąć, która spółka najbardziej urośnie.
 
-## Kontekst
+## KONTEKST
 
 - Jestem inwestorem detalicznym z Polski. Mam rachunek w **DM BOŚ (bossa.pl)**
-  i gram na **giełdowych kontraktach terminowych na akcje z GPW**. Chodzi
-  o futures notowane na GPW i rozliczane przez KDPW_CCP. **Nie** chodzi o CFD
-  z bossaFX.
-- Dzisiejsza data: **[DATA, np. 2026-11-11]**. Jeśli masz dostęp do internetu
-  lub narzędzi wyszukiwania, **użyj aktualnych danych** (notowania, wyniki
-  kwartalne, raporty ESPI/EBI, rekomendacje, kalendarz dywidend, dane
-  makro/NBP). Jeśli nie masz dostępu, napisz to wprost, podaj datę, do której
-  sięga Twoja wiedza, i oznacz każdą liczbę, której nie da się zweryfikować.
-- Kapitał przeznaczony na tę strategię: **[KWOTA PLN]**
-- Horyzont pozycji: **[np. kilka dni / 2–6 tygodni / do najbliższej serii]**
-- Maksymalna akceptowalna strata na jedną pozycję: **[np. 2% kapitału]**
-- Styl i preferencje: **[np. swing, momentum, gra pod wyniki, unikam
-  wydarzeń binarnych]**
+  i handluję **giełdowymi kontraktami terminowymi na akcje z GPW**, które
+  rozlicza KDPW_CCP. **Nie** chodzi o CFD z bossaFX.
+- Interesują mnie **kontrakty na pojedyncze spółki**. FW20 możesz użyć jako
+  punktu odniesienia albo nogi zabezpieczającej, ale odpowiedzią ma być spółka.
+- Dzisiejsza data: **[DATA]**.
+- Kapitał: **[KWOTA PLN; domyślnie 50 000 PLN]**
+- Ryzyko na transakcję: **[domyślnie 0,5–1% kapitału]**
+- Horyzont: **[np. kilka dni / 2–6 tygodni; jeśli puste, zaproponuj
+  optymalny dla każdego setupu]**
+- Preferencje: **[np. unikam trzymania pozycji przez publikację wyników]**
 
-## Zadanie
+## CEL
 
-Ustal, **która spółka z GPW, na którą notowane są kontrakty terminowe, daje
-obecnie najlepszą okazję do zagrania futures**. Przeanalizuj **osobno dwa
-scenariusze, LONG i SHORT**, i wskaż najlepszego kandydata w każdym z nich.
-Na koniec wybierz jedną najlepszą transakcję ogółem albo napisz, że teraz
-żadna nie jest wystarczająco dobra.
+Wskaż **najlepszą transakcję LONG** i **najlepszą transakcję SHORT** na
+kontraktach terminowych na akcje z GPW. Mogą dotyczyć różnych spółek.
 
-## Krok 1. Uniwersum i filtr płynności (zrób to najpierw)
+„Najlepsza” oznacza najlepszy stosunek możliwości do ryzyka **po
+uwzględnieniu płynności kontraktu, kosztów, depozytu i ryzyka zdarzeń**.
+Nie chodzi o spółkę z najlepszymi fundamentami ani o tę, która „najbardziej
+spadnie”. Świetna spółka z niepłynnym kontraktem to zła transakcja.
+
+## DANE I UCZCIWOŚĆ
+
+- Jeśli masz dostęp do internetu lub narzędzi, **użyj aktualnych danych**:
+  notowania, LOP i wolumen z GPW, raporty ESPI/EBI, wyniki, konsensusy,
+  kalendarz dywidend i WZA, decyzje NBP, tabele depozytów i prowizji bossa.pl.
+- Jeśli nie masz dostępu, **napisz to na samym początku**, podaj datę, do
+  której sięga Twoja wiedza, i nie udawaj, że analizujesz bieżący rynek.
+  W takim wypadku przygotuj metodologię i listę kandydatów do sprawdzenia,
+  ale nie podawaj poziomów wejścia.
+- Każdą liczbę opisz źródłem i datą albo oznacz jako **[szacunek]** lub
+  **[do weryfikacji]**. Nie wymyślaj notowań, wartości wskaźników, depozytów
+  ani prowizji. Licz tylko te wskaźniki, do których masz dane.
+
+---
+
+## ETAP 1. Uniwersum i filtr płynności
 
 1. Wypisz spółki, na które **faktycznie są notowane** kontrakty terminowe na
    GPW (głównie WIG20 i część mWIG40). Sprawdź to w aktualnej liście
-   instrumentów GPW, bo lista się zmienia.
-2. Odrzuć kontrakty niepłynne. Dla każdego kandydata podaj (lub oszacuj
-   i oznacz jako szacunek):
+   instrumentów, bo lista się zmienia. Nie zakładaj, że istnieją kontrakty na
+   spółki spoza tej listy.
+2. Dla każdej spółki podaj (lub oszacuj i oznacz):
    - średni dzienny wolumen i liczbę otwartych pozycji (LOP) w najbliższej
      serii,
    - typowy spread bid/ask w tickach i w % ceny,
-   - czy jest animator rynku.
-   Kontrakt z niskim LOP i szerokim spreadem odpada, nawet jeśli spółka
-   wygląda świetnie. Wyjście z pozycji jest ważniejsze niż wejście.
-3. Zostaw **krótką listę 5–8 spółek** do dalszej analizy.
+   - czy jest animator rynku,
+   - ATR (dzienny zakres ruchu) w PLN na kontrakt.
+3. Odrzuć kontrakty, na których nie da się otworzyć i zamknąć pozycji bez
+   istotnego poślizgu. Wyjście z pozycji jest ważniejsze niż wejście.
+4. Zostaw **krótką listę 6–10 spółek**.
 
-## Krok 2. Analiza krótkiej listy
-
-Dla każdej spółki z krótkiej listy oceń:
+## ETAP 2. Analiza krótkiej listy
 
 **Fundamenty i katalizatory**
-- Ostatnie wyniki kwartalne vs konsensus, trend przychodów, marż i zadłużenia.
-- Najbliższe katalizatory w horyzoncie pozycji: publikacja wyników, WZA,
-  **dzień ustalenia prawa do dywidendy**, emisje, buybacki, decyzje
-  regulacyjne, zmiany w składzie indeksów, lock-upy.
-- Ryzyka specyficzne dla polskiego rynku: Skarb Państwa jako akcjonariusz
-  (ryzyko polityczne, zmiany w zarządach, „misje”), podatki sektorowe,
-  regulacje (np. banki: frankowicze, WIBOR/WIRON, stopy NBP; energetyka:
-  ceny CO2, mrożenie cen; surowce: ceny miedzi i srebra, kurs USD/PLN).
+- Wyniki vs konsensus, dynamika przychodów i zysków, marże, zadłużenie,
+  przepływy pieniężne, wycena na tle sektora.
+- Katalizatory w horyzoncie pozycji: publikacja wyników, WZA, **dzień
+  ustalenia prawa do dywidendy**, emisje, buybacki, zmiany w indeksach,
+  lock-upy, decyzje regulacyjne.
+- Ryzyka typowe dla GPW: Skarb Państwa jako akcjonariusz (polityka, zmiany
+  zarządów, „misje”), podatki sektorowe, regulacje (banki: frankowicze,
+  WIBOR/WIRON, stopy NBP; energetyka: ceny CO2, mrożenie cen; surowce: ceny
+  miedzi i srebra, USD/PLN).
 
 **Technika i przepływy**
-- Trend na interwale D1 i W1, kluczowe wsparcia i opory, średnie (50/200),
-  RSI, zmienność (ATR w PLN i w %).
-- Relatywna siła vs WIG20 / WIG / sektor.
-- Pozycjonowanie: zmiany LOP na kontrakcie, aktywność OFE/TFI, jeśli są
-  znane, short interest, o ile dostępny.
+- Trend na D1 i W1; jeśli horyzont jest krótki i masz dane, także H4.
+- EMA 20/50/200, RSI, ATR, wsparcia i opory.
+- Relatywna siła vs WIG20, WIG i sektor; korelacja z USD/PLN i rynkami
+  zagranicznymi.
+- Zmiany LOP na kontrakcie (napływ nowych pozycji czy ich zamykanie).
 
-**Kontekst makro**
-- Polityka NBP i Fed, kurs PLN, napływy zagraniczne na GPW, koniunktura na
-  rynkach wschodzących, sentyment do sektora.
+**Makro**
+- Polityka NBP i Fed, kurs PLN, napływy zagraniczne na GPW, sentyment do
+  rynków wschodzących i do sektora.
 
-## Krok 3. Mechanika kontraktu i realia DM BOŚ (obowiązkowo dla finalistów)
+Na tej podstawie przypisz każdej spółce **kierunek, który ma sens: LONG,
+SHORT albo brak przewagi**.
 
-Dla wybranych kandydatów (LONG i SHORT) policz konkretnie:
+## ETAP 3. Ranking z wagami (osobno dla LONG i SHORT)
 
-1. **Specyfikacja kontraktu**: mnożnik (liczba akcji na kontrakt), wartość
-   ticka w PLN, miesiące serii (marzec/czerwiec/wrzesień/grudzień), ostatni
-   dzień obrotu (zwykle trzeci piątek miesiąca serii), limity wahań.
-2. **Wartość nominalna jednego kontraktu** w PLN przy bieżącej cenie.
-3. **Depozyt zabezpieczający**: depozyt wymagany przez KDPW_CCP **oraz**
-   depozyt wymagany przez DM BOŚ, który może być wyższy. Zaznacz, że trzeba
-   go potwierdzić w aktualnej tabeli depozytów bossa.pl. Podaj wynikającą
-   z niego **efektywną dźwignię**.
-4. **Koszty**: prowizja DM BOŚ za kontrakt na akcje (sprawdź aktualną tabelę
-   opłat i prowizji) plus spread. Policz, ile ticków ruchu potrzeba, żeby
-   pokryć koszty wejścia i wyjścia.
-5. **Basis i dywidenda**: porównaj cenę futures z ceną spot. Jeśli w trakcie
-   życia serii przypada dzień dywidendy, wyjaśnij, jak to wpływa na wycenę.
-   Posiadacz longa na futures nie dostaje dywidendy, a cena kontraktu ją
-   już dyskontuje. Pułapka: short na akcji „pod dywidendę” przez futures nie
-   daje darmowego zysku.
+Zrób **dwie tabele**: TOP 5 kandydatów LONG i TOP 5 kandydatów SHORT.
+Oceń każdego w skali 1–10:
+
+| Kryterium | Waga |
+|---|---|
+| Płynność kontraktu (LOP, wolumen, spread) | 25% |
+| Siła tezy i jakość katalizatora w danym kierunku | 20% |
+| Risk/Reward setupu (wejście, stop, cel) | 15% |
+| Zmienność dopasowana do horyzontu i depozytu | 10% |
+| Koszty (prowizja + spread) względem ATR | 10% |
+| Zgodność techniki z tezą | 10% |
+| Ryzyko zdarzeń przeciwnych (luka, wezwanie, squeeze, polityka) | 10% |
+
+Podaj wynik ważony i **jedno zdanie uzasadnienia dla każdej oceny**.
+
+Dla SHORT-ów osobno sprawdź: ryzyko wezwania lub przejęcia, skupu akcji
+własnych, short squeeze i dywidendy w trakcie serii.
+
+## ETAP 4. Mechanika kontraktu i realia DM BOŚ (dla zwycięzców)
+
+Dla zwycięzcy LONG i zwycięzcy SHORT policz:
+
+1. **Specyfikacja**: ticker serii, mnożnik, wartość ticka w PLN, ostatni
+   dzień obrotu (zwykle trzeci piątek marca, czerwca, września lub grudnia),
+   limity wahań.
+2. **Wartość nominalna** jednego kontraktu w PLN.
+3. **Depozyt**: depozyt wymagany przez KDPW_CCP **oraz** depozyt wymagany
+   przez DM BOŚ, który może być wyższy. Do potwierdzenia na bossa.pl.
+   Podaj wynikającą z niego **efektywną dźwignię**.
+4. **Koszty**: prowizja DM BOŚ + spread. Ile ticków trzeba, żeby pokryć
+   wejście i wyjście?
+5. **Basis i dywidenda**: cena futures vs spot. Long na futures nie dostaje
+   dywidendy, a jej oczekiwana wartość jest już w cenie kontraktu. Short pod
+   dywidendę nie jest darmowym zyskiem.
 6. **Rolowanie**: czy horyzont wymaga przejścia na kolejną serię, ile to
-   kosztuje i kiedy najlepiej rolować przy danej płynności.
-7. **Wielkość pozycji**: przy moim kapitale i maksymalnej stracie policz,
-   **ile kontraktów** mogę otworzyć, żeby stop loss nie przekroczył limitu
-   ryzyka. Uwzględnij, że dzienna wycena (mark-to-market) może wywołać
-   wezwanie do uzupełnienia depozytu wcześniej niż stop.
-8. **Ryzyko luki cenowej**: oceń ryzyko luki na otwarciu (wyniki publikowane
-   po sesji, newsy polityczne) i to, czy stop loss realnie zadziała.
+   kosztuje i kiedy rolować.
+7. **Mark-to-market**: dzienne rozliczenie może wywołać wezwanie do
+   uzupełnienia depozytu przed osiągnięciem stopu. Policz, jaki bufor
+   gotówki trzymać.
+8. **Ryzyko luki**: czy stop zadziała przy publikacji po sesji lub nagłym
+   newsie politycznym.
 
-## Krok 4. Scenariusz LONG i scenariusz SHORT
+## ETAP 5. Plany transakcyjne
 
-Dla **każdego** z dwóch scenariuszy przedstaw:
+Dla **LONG** i dla **SHORT** osobno:
 
 | Pole | Treść |
 |---|---|
-| Spółka i seria kontraktu | np. FXXXZ26 (podaj właściwy ticker) |
-| Teza w 2–3 zdaniach | dlaczego właśnie ta spółka i ten kierunek |
+| Spółka i seria kontraktu | ticker serii |
+| Teza (2–3 zdania) | dlaczego ta spółka i ten kierunek |
 | Katalizator i timing | co ma uruchomić ruch i kiedy |
-| Strefa wejścia | konkretne poziomy cenowe |
-| Stop loss | poziom i uzasadnienie (techniczne lub fundamentalne) |
-| Cel(e) zysku | TP1 / TP2 z uzasadnieniem |
-| Risk/Reward | liczbowo |
-| Liczba kontraktów | przy moim kapitale i limicie ryzyka |
+| Warunki otwarcia | co musi się wydarzyć, żeby wejść (nie tylko poziom) |
+| Strefa wejścia | konkretne poziomy |
+| Stop loss | poziom i uzasadnienie |
+| TP1 / TP2 | poziomy i uzasadnienie |
+| R:R | liczbowo |
+| Liczba kontraktów | przy moim kapitale i ryzyku na transakcję |
 | Depozyt i dźwignia | w PLN i jako krotność |
-| Wynik w PLN | przy stopie i przy każdym TP, po kosztach |
-| Prawdopodobieństwo | Twoja subiektywna ocena i z czego wynika |
-| Co unieważnia tezę | konkretne sygnały, przy których wychodzę wcześniej |
+| Wynik w PLN po kosztach | przy stopie, TP1 i TP2 |
+| Styl | intraday / swing / kilkudniowa, z uzasadnieniem |
+| Co unieważnia tezę | sygnały do wcześniejszego wyjścia |
 | Główne ryzyka | 3–5 punktów |
 
-Dodatkowo:
-- Pokaż **2 kolejne alternatywy** dla każdego kierunku (1–2 zdania każda).
-- Dla SHORT-a sprawdź, czy spółka nie jest kandydatem do short squeeze,
-  wezwania lub przejęcia, skupu akcji własnych albo innego zdarzenia, które
-  może wystrzelić kurs w górę.
-- Rozważ wariant **pair trade** (long jednej spółki + short drugiej z tego
-  samego sektora albo vs FW20), jeśli to zmniejsza ryzyko rynkowe.
+Jeśli zwycięzcy LONG i SHORT są z tego samego sektora albo silnie
+skorelowani, oceń wariant **pair trade** (long + short naraz) i porównaj jego
+ryzyko z dwiema osobnymi pozycjami.
 
-## Krok 5. Werdykt
+## ETAP 6. Krytyczna weryfikacja
 
-1. Ranking: najlepsza okazja LONG, najlepsza okazja SHORT, i która z nich
-   jest **lepsza ogółem** (oceń R/R, płynność, jakość katalizatora
-   i ryzyko zdarzeń).
-2. Jeśli żadna okazja nie spełnia minimum (R/R ≥ 2, wystarczająca płynność,
-   jasny katalizator), **powiedz wprost, żeby nie wchodzić**, i napisz, na co
-   czekać.
-3. Krótka checklista przed złożeniem zlecenia w bossaNOVA lub na platformie
-   webowej DM BOŚ: co sprawdzić (depozyt, seria, typ zlecenia, stop, godziny
-   notowań, kalendarz wydarzeń).
+Dla każdego zwycięzcy:
+- **Spróbuj obalić własną rekomendację.** Podaj najmocniejsze argumenty
+  przeciw.
+- Sprawdź, czy kandydat z miejsca 2 nie jest jednak lepszy.
+- Oddziel **fakty** (ze źródłem i datą) od **hipotez** i **spekulacji**.
+- Podaj listę źródeł i datę aktualności danych.
 
-## Zasady odpowiedzi
+## ETAP 7. Werdykt
 
-- Odpowiadaj po polsku.
-- Każdą liczbę opisz źródłem i datą albo oznacz jako **[szacunek]** lub
-  **[do weryfikacji]**. Nie wymyślaj notowań, wyników, depozytów ani
-  prowizji. Jeśli czegoś nie wiesz, napisz to.
-- Bądź bezpośredni. Jeśli setup jest słaby, powiedz to zamiast na siłę
-  wybierać spółkę.
-- Pamiętaj, że kontrakty to dźwignia. Strata może przekroczyć wpłacony
-  depozyt, a każdą rekomendację opieraj na kontroli ryzyka.
-- Na końcu jedna linijka o podatkach: zysk i strata z futures rozliczane są
-  w PIT-38 (19%), DM BOŚ wystawia PIT-8C, straty można kompensować z zyskami
-  z innych instrumentów kapitałowych w tym samym roku.
-- To analiza, nie porada inwestycyjna. Dodaj to w jednym zdaniu na końcu, bez
-  rozwlekania.
+1. Najlepszy LONG, najlepszy SHORT, i **który z nich jest lepszą transakcją
+   teraz**.
+2. Minimum do wejścia: R:R ≥ 2, kontrakt przechodzi filtr płynności, jest
+   jasny katalizator lub sygnał. **Jeśli setup nie spełnia minimum, napisz
+   wprost „nie wchodzić”** i na co czekać. Nie szukaj zwycięzcy na siłę.
+3. Checklista przed złożeniem zlecenia w bossaNOVA lub na platformie
+   webowej DM BOŚ: depozyt i wolne środki, właściwa seria, typ zlecenia
+   i stop, godziny notowań, kalendarz wydarzeń do wygaśnięcia serii.
+
+## ZASADY ODPOWIEDZI
+
+- Po polsku. Najpierw tabele i liczby, potem komentarz.
+- Bądź bezpośredni. Słaby setup nazwij słabym.
+- Pamiętaj o dźwigni: strata może przekroczyć depozyt.
+- Jedna linijka o podatkach: PIT-38, 19%, PIT-8C od DM BOŚ, straty można
+  kompensować z zyskami kapitałowymi z tego samego roku.
+- Jedno zdanie, że to analiza, a nie porada inwestycyjna.
